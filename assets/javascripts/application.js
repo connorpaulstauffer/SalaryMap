@@ -18,7 +18,6 @@ function initialize () {
       .attr("class", "background")
       .attr("width", width)
       .attr("height", height)
-      .on("click", clicked);
 
   var g = svg.append("g");
 
@@ -31,7 +30,6 @@ function initialize () {
         .data(topojson.feature(us, us.objects.states).features)
       .enter().append("path")
         .attr("d", path)
-        .on("clicked", clicked)
         .on("mouseover", handleMouseOver)
         .on("mouseout", handleMouseOut);
   });
@@ -41,31 +39,6 @@ function initialize () {
   };
 
   function handleMouseOut () {
-    d3.select(this).style({"stroke": "#fff"})
+    d3.select(this).style({"stroke": "white"})
   };
-
-  function clicked(d) {
-    var x, y, k;
-
-    if (d && centered !== d) {
-      var centroid = path.centroid(d);
-      x = centroid[0];
-      y = centroid[1];
-      k = 4;
-      centered = d;
-    } else {
-      x = width / 2;
-      y = height / 2;
-      k = 1;
-      centered = null;
-    }
-
-    g.selectAll("path")
-        .classed("active", centered && function(d) { return d === centered; });
-
-    g.transition()
-        .duration(750)
-        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
-        .style("stroke-width", 1.5 / k + "px");
-  }
 };
