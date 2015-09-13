@@ -18,14 +18,14 @@ CSV.foreach("data.csv", { encoding: 'ISO-8859-1', headers: true, header_converte
 end
 
 data[:occupations].each do |_, states|
-  min = states.min_by { |state| state[:average_salary].to_i }[:average_salary].to_i
-  max = states.max_by { |state| state[:average_salary].to_i }[:average_salary].to_i
+  min = states.min_by { |state| state[:average_salary].to_i }[:average_salary].to_f
+  max = states.max_by { |state| state[:average_salary].to_i }[:average_salary].to_f
   states.each do |state|
     if max = min
       state[:distribution] = 0
     else
       begin
-        state[:distribution] = (state[:average_salary].to_i - min) / (max - min)
+        state[:distribution] = (state[:average_salary].to_f - min) / (max - min)
       rescue
         byebug
       end
