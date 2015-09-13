@@ -1,38 +1,34 @@
 function initialize () {
-  var width = 960,
-      height = 500,
-      centered;
-
-  var projection = d3.geo.albersUsa()
-      .scale(1070)
-      .translate([width / 2, height / 2]);
-
-  var path = d3.geo.path()
-      .projection(projection);
+  var width = 960, height = 600;
 
   var svg = d3.select("body").append("svg")
       .attr("width", width)
       .attr("height", height);
 
-  svg.append("rect")
-      .attr("class", "background")
-      .attr("width", width)
-      .attr("height", height)
-
-  var g = svg.append("g");
-
-  d3.json("us.json", function(error, us) {
+  d3.json("united_states_paths.json", function (error, paths) {
     if (error) throw error;
-
-    g.append("g")
-        .attr("id", "states")
-      .selectAll("path")
-        .data(topojson.feature(us, us.objects.states).features)
-      .enter().append("path")
-        .attr("d", path)
-        .on("mouseover", handleMouseOver)
-        .on("mouseout", handleMouseOut);
+    for (var i = 0; i < paths.length; i++) {
+      paths[i]
+      svg.selectAll(".state")
+			   .data(paths).enter().append("path").attr("class","state")
+         .attr("d",function(d){ return d.d;})
+			   .style({"fill": "grey", "stroke": "white"})
+         .on("mouseover", handleMouseOver)
+         .on("mouseout", handleMouseOut)
+    }
   });
+
+  function renderMap (occupation) {
+    occupation = occupation || "All Occupations";
+    maxMin = findMaxMin(occupation);
+  };
+
+  function findMaxMin (occupation) {
+    d3.json("data.json", function (error, data) {
+      if (error) throw error;
+      debugger;
+    })
+  };
 
   function handleMouseOver () {
     d3.select(this.parentNode.appendChild(this)).style({"stroke": "blue"})
@@ -41,4 +37,6 @@ function initialize () {
   function handleMouseOut () {
     d3.select(this).style({"stroke": "white"})
   };
+
+  renderMap();
 };
