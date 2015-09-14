@@ -37,3 +37,10 @@
   top: 50%;
   transform: translateY(-50%);
 }
+
+#credit-link {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%); 
+}
