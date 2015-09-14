@@ -8,6 +8,7 @@ current_state = nil
 CSV.foreach("data.csv", { encoding: 'ISO-8859-1', headers: true, header_converters: :symbol, converters: :all}) do |row|
   begin
     this_row = row.to_hash
+    next if ["Puerto Rico", "Guam", "Virgin Islands"].include?(this_row[:state])
     unless this_row[:a_mean] == "*"
       data[:occupations][this_row[:occ_title]] ||= {}
       data[:occupations][this_row[:occ_title]][:states] ||= {}

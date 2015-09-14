@@ -16,9 +16,28 @@
       </form>
     </div>
 
-    <h2 id="salary-amount"></h2>
+    <div id="content">
+      <div class="content-block" id="map-container"></div>
 
-    <div id="map-container"></div>
+      <table class="content-block" id="salary-figures">
+        <tr id="hover-row">
+          <td class="header"><span id="hover-state"></span> average:</td>
+          <td class="figure"><span id="hover-salary"></span></td>
+        </tr>
+        <tr>
+          <td class="header">US average:</td>
+          <td class="figure"><span id="mean"></span></td>
+        </tr>
+        <tr>
+          <td class="header">US min:</td>
+          <td class="figure"><span id="min"></span></td>
+        </tr>
+        <tr>
+          <td class="header">US max:</td>
+          <td class="figure"><span id="max"></span></td>
+        </tr>
+      </table>
+    </div>
     <script type="text/javascript">
       (function () { initialize() })();
     </script>

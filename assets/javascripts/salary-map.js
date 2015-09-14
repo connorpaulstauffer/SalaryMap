@@ -1,4 +1,5 @@
 function initialize () {
+  document.getElementById("content").setAttribute("style", "height:" + (window.innerHeight - 35) + "px");
   setupContainer();
   loadMapData();
   loadOccupationData(function () {
@@ -117,11 +118,28 @@ function setupOccupations () {
     occupationDropdown.appendChild(option);
   }
   window.occupation = occupationDropdown.options[occupationDropdown.selectedIndex].value
+  setFigures();
+  updateMap();
   occupationDropdown.addEventListener("change", function (event) {
     window.occupation = event.target.options[event.target.selectedIndex].value;
     updateMap();
+    setFigures();
   }, false);
 };
+
+function setFigures () {
+  identifiers = ["mean", "min", "max"];
+  for (var i = 0; i < identifiers.length; i++) {
+    var id = identifiers[i];
+    var node = document.getElementById(id);
+    var val = window.occupationData["occupations"][window.occupation]["data"][id];
+    node.innerHTML = "$ " + withCommas(val);
+  }
+};
+
+function withCommas(number) {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 
 function handleMouseOver (event) {
   var state = this.getAttribute("state");
@@ -131,11 +149,14 @@ function handleMouseOver (event) {
   } else {
     var salary = "";
   }
-  document.getElementById("salary-amount").innerHTML = "$ " + salary;
-  d3.select(this.parentNode.appendChild(this)).style({"stroke": "blue"});
+  document.getElementById("hover-row").setAttribute("style", "visibility:visible")
+  document.getElementById("hover-salary").innerHTML = "$ " + salary;
+  document.getElementById("hover-state").innerHTML = state;
+  d3.select(this.parentNode.appendChild(this)).style({"stroke": "#03AACC"});
 };
 
 function handleMouseOut () {
-  document.getElementById("salary-amount").innerHTML = ""
+  document.getElementById("hover-row").setAttribute("style", "visibility:hidden")
+  document.getElementById("hover-salary").innerHTML = ""
   d3.select(this).style({"stroke": "white"})
 };

@@ -1,17 +1,39 @@
-body {
-  /*background-color: black;*/
-}
-
 .background {
   fill: none;
   pointer-events: all;
 }
 
 #states {
-  fill: #aaa;
   stroke: white;
 }
 
-#salary-amount {
+#salary-figures td {
   height: 30px;
+}
+
+#salary-figures td.header {
+  width: 180px;
+}
+
+#salary-figures td.figure {
+  width: 100px;
+}
+
+#hover-row {
+  visibility: hidden;
+}
+
+#salary-figures {
+  right: 0;
+}
+
+#content {
+  width: 1220px;
+  position: relative;
+}
+
+#content .content-block {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
 }
