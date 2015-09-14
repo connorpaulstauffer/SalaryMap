@@ -1,10 +1,11 @@
 function initialize () {
-  document.getElementById("content").setAttribute("style", "height:" + (window.innerHeight - 35) + "px");
+  document.getElementById("content")
+    .setAttribute("style", "height:" + (window.innerHeight - 35) + "px");
   setupContainer();
   loadMapData();
   loadOccupationData(function () {
-    setupCategories();
     renderMap();
+    setupCategories();
   });
 };
 
@@ -28,43 +29,31 @@ function setupContainer () {
 
   var svg = d3.select("#map-container").append("svg")
       .attr("width", width)
-      .attr("height", height);
+      .attr("height", height)
+      .attr("id", "map-svg")
+      .attr("version", "1.1")
+      .attr("xmlns", "http://www.w3.org/2000/svg");
 };
 
 function renderMap () {
-  var occupation = "All Occupations";
-  var stateData = window.occupationData["occupations"][occupation]["states"]
-
   d3.select("svg").selectAll(".state")
 	   .data(window.mapData).enter().append("path").attr("class","state")
      .attr("d", function (d) { return d.d; })
      .attr("state", function (d) { return d.n })
-	   .style({
-       "fill": function (d) {
-         if (stateData[d.n]) {
-           return d3.interpolateRgb("#E8F0E9", "#216C2A")(stateData[d.n]["distribution"]);
-         } else {
-           return "grey";
-         }
-       },
-       "stroke": "white"
-     })
      .on("mouseover", handleMouseOver)
      .on("mouseout", handleMouseOut)
 };
 
 function updateMap () {
   var stateData = window.occupationData["occupations"][window.occupation]["states"]
-  var states = d3.select("svg").selectAll(".state")[0];
+  var states = document.getElementsByClassName("state");
   for (var i = 0; i < states.length; i++) {
     var stateNode = states[i];
     var state = stateNode.getAttribute("state");
     if (stateData[state]) {
       stateNode.style.fill = d3.interpolateRgb("#E8F0E9", "#216C2A")(stateData[state]["distribution"]);
-      // stateNode.style.fill-opacity = 1;
     } else {
       stateNode.style.fill = "grey";
-      // stateNode.style.fill-opacity = 0.5;
     }
     stateNode.style.stroke = "white";
   }
