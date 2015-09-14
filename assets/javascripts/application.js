@@ -32,7 +32,7 @@ function setupContainer () {
 
 function renderMap () {
   var occupation = "All Occupations";
-  var stateData = window.occupationData["occupations"][occupation]
+  var stateData = window.occupationData["occupations"][occupation]["states"]
 
   d3.select("svg").selectAll(".state")
 	   .data(window.mapData).enter().append("path").attr("class","state")
@@ -42,18 +42,10 @@ function renderMap () {
        "fill": function (d) {
          if (stateData[d.n]) {
            return d3.interpolateRgb("#E8F0E9", "#216C2A")(stateData[d.n]["distribution"]);
-          //  return "#216C2A";
          } else {
            return "grey";
          }
        },
-      //  "fill-opacity": function (d) {
-      //    if (stateData[d.n]) {
-      //      return 1;
-      //    } else {
-      //      return 0.5;
-      //    }
-      //  },
        "stroke": "white"
      })
      .on("mouseover", handleMouseOver)
@@ -61,7 +53,7 @@ function renderMap () {
 };
 
 function updateMap () {
-  var stateData = window.occupationData["occupations"][window.occupation]
+  var stateData = window.occupationData["occupations"][window.occupation]["states"]
   var states = d3.select("svg").selectAll(".state")[0];
   for (var i = 0; i < states.length; i++) {
     var stateNode = states[i];
@@ -133,7 +125,7 @@ function setupOccupations () {
 
 function handleMouseOver (event) {
   var state = this.getAttribute("state");
-  var hash = window.occupationData["occupations"][window.occupation][state];
+  var hash = window.occupationData["occupations"][window.occupation]["states"][state];
   if (hash) {
     var salary = hash["average_salary"];
   } else {
