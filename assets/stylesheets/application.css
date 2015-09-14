@@ -11,3 +11,7 @@ body {
   fill: #aaa;
   stroke: white;
 }
+
+#salary-amount {
+  height: 30px;
+}

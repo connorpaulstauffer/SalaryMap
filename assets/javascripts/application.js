@@ -37,36 +37,44 @@ function renderMap () {
   d3.select("svg").selectAll(".state")
 	   .data(window.mapData).enter().append("path").attr("class","state")
      .attr("d", function (d) { return d.d; })
+     .attr("state", function (d) { return d.n })
 	   .style({
-       "fill": "green",
-       "stroke": "white",
-       "fill-opacity": function (d) { return stateData[d.n]["distribution"] }
-     })
-    //  .on("mouseover", handleMouseOver)
-    //  .on("mouseout", handleMouseOut)
-};
-
-function updateMap (occupation) {
-  var stateData = window.occupationData["occupations"][occupation]
-
-  d3.select("svg").selectAll(".state")
-	   .data(window.mapData).style({
        "fill": function (d) {
          if (stateData[d.n]) {
-           return "green";
+           return d3.interpolateRgb("#E8F0E9", "#216C2A")(stateData[d.n]["distribution"]);
+          //  return "#216C2A";
          } else {
            return "grey";
          }
        },
-       "stroke": "white",
-       "fill-opacity": function (d) {
-         if (stateData[d.n]) {
-           return stateData[d.n]["distribution"]
-         } else {
-           return 0.5
-         }
-       }
+      //  "fill-opacity": function (d) {
+      //    if (stateData[d.n]) {
+      //      return 1;
+      //    } else {
+      //      return 0.5;
+      //    }
+      //  },
+       "stroke": "white"
      })
+     .on("mouseover", handleMouseOver)
+     .on("mouseout", handleMouseOut)
+};
+
+function updateMap () {
+  var stateData = window.occupationData["occupations"][window.occupation]
+  var states = d3.select("svg").selectAll(".state")[0];
+  for (var i = 0; i < states.length; i++) {
+    var stateNode = states[i];
+    var state = stateNode.getAttribute("state");
+    if (stateData[state]) {
+      stateNode.style.fill = d3.interpolateRgb("#E8F0E9", "#216C2A")(stateData[state]["distribution"]);
+      // stateNode.style.fill-opacity = 1;
+    } else {
+      stateNode.style.fill = "grey";
+      // stateNode.style.fill-opacity = 0.5;
+    }
+    stateNode.style.stroke = "white";
+  }
 };
 
 function setupCategories () {
@@ -116,17 +124,26 @@ function setupOccupations () {
     option.setAttribute("value", occupation);
     occupationDropdown.appendChild(option);
   }
-  updateMap(occupationDropdown.options[occupationDropdown.selectedIndex].value);
+  window.occupation = occupationDropdown.options[occupationDropdown.selectedIndex].value
   occupationDropdown.addEventListener("change", function (event) {
-    var occupation = event.target.options[event.target.selectedIndex].value;
-    updateMap(occupation);
+    window.occupation = event.target.options[event.target.selectedIndex].value;
+    updateMap();
   }, false);
 };
 
-function handleMouseOver () {
-  d3.select(this.parentNode.appendChild(this)).style({"stroke": "blue"})
+function handleMouseOver (event) {
+  var state = this.getAttribute("state");
+  var hash = window.occupationData["occupations"][window.occupation][state];
+  if (hash) {
+    var salary = hash["average_salary"];
+  } else {
+    var salary = "";
+  }
+  document.getElementById("salary-amount").innerHTML = "$ " + salary;
+  d3.select(this.parentNode.appendChild(this)).style({"stroke": "blue"});
 };
 
 function handleMouseOut () {
+  document.getElementById("salary-amount").innerHTML = ""
   d3.select(this).style({"stroke": "white"})
 };
